@@ -3,6 +3,11 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import axios from 'axios';
 import NodeCache from 'node-cache';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 dotenv.config();
 
@@ -12,6 +17,11 @@ const cache = new NodeCache({ stdTTL: 3600 }); // Cache for 1 hour
 
 app.use(cors());
 app.use(express.json());
+
+// Serve static files from the client build in production
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../client/dist')));
+}
 
 // Spotify Token Management
 let spotifyToken = null;
@@ -224,6 +234,13 @@ app.get('/api/lyrics', async (req, res) => {
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
+
+// Serve React app for all non-API routes in production
+if (process.env.NODE_ENV === 'production') {
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+  });
+}
 
 app.listen(PORT, () => {
   console.log(`🎵 IAMMUSIC Server running on http://localhost:${PORT}`);

@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_BASE_URL = '/api';
+// In production, API is served from the same origin; in development, use proxy
+const API_BASE_URL = import.meta.env.MODE === 'production' ? '/api' : '/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
