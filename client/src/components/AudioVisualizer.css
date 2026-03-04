@@ -1,0 +1,16 @@
+.audio-visualizer {
+  position: fixed;
+  bottom: 90px;
+  left: 0;
+  right: 0;
+  height: 200px;
+  background: linear-gradient(180deg, transparent, var(--bg-primary) 80%);
+  pointer-events: none;
+  z-index: 50;
+}
+
+.audio-visualizer canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
